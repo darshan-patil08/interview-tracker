@@ -10,8 +10,6 @@ export function QuestionList({
   questions,
   totalCount,
   searchQuery,
-  // eslint-disable-next-line no-unused-vars
-  hasActiveFilters,
   onToggleStatus,
   onEdit,
   onDelete,
