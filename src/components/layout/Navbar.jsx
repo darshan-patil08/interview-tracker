@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from '../ui/Button';
 import {
-  Sparkles,
   Plus,
   RotateCcw,
   Download,
@@ -9,7 +8,6 @@ import {
   Trash2,
   Code2,
   MoreVertical,
-  CheckCircle2,
 } from 'lucide-react';
 
 /**

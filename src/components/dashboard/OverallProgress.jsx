@@ -1,5 +1,5 @@
 import ProgressBar from '../ui/ProgressBar';
-import { Target, Trophy, Flame } from 'lucide-react';
+import { Target } from 'lucide-react';
 
 /**
  * OverallProgress Component
@@ -11,13 +11,13 @@ export function OverallProgress({ stats }) {
   const getMilestone = () => {
     if (total === 0) return { label: 'Empty Tracker', desc: 'Add questions to begin tracking readiness', color: 'text-zinc-400' };
     if (completionRate >= 80) return { label: 'Interview Ready 🚀', desc: 'Exceptional consistency! Ready for full loops', color: 'text-emerald-400' };
-    if (completionRate >= 50) return { label: `Strong Momentum ${Flame} `, desc: 'More than halfway through your prep goals', color: 'text-amber-400' };
+    if (completionRate >= 50) return { label: 'Strong Momentum 🔥', desc: 'More than halfway through your prep goals', color: 'text-amber-400' };
     if (completionRate >= 20) return { label: 'In The Zone ⚡', desc: 'Solid foundation forming across key domains', color: 'text-blue-400' };
     return { label: 'Kickoff Stage 🌱', desc: 'Start knocking out pending problems one by one', color: 'text-purple-400' };
   };
 
   const milestone = getMilestone();
-1
+
   return (
     <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-lg shadow-black/20 flex flex-col justify-between">
       <div className="flex items-start justify-between gap-4">

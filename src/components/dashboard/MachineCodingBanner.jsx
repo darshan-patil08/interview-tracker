@@ -1,4 +1,4 @@
-import { Laptop, Terminal, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Laptop, Sparkles } from 'lucide-react';
 import Button from '../ui/Button';
 
 /**
@@ -7,7 +7,6 @@ import Button from '../ui/Button';
  */
 export function MachineCodingBanner({ machineStats, onAddMachineTask }) {
   const { total, completed } = machineStats || { total: 0, completed: 0 };
-  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
   const isAllCleared = completed === total && total > 0;
 
   return (

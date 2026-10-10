@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import useQuestions from './hooks/useQuestions';
 import useFilters from './hooks/useFilters';
@@ -147,7 +147,6 @@ export function App() {
       }
     };
     reader.readAsText(file);
-    // Reset file input value
     e.target.value = '';
   };
 
@@ -193,7 +192,7 @@ export function App() {
 
       {/* 2. Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
-        {/* Dashboard Section (KPIs, Visual Progress, Category Breakdown, Charts) */}
+        {/* Dashboard Section */}
         <section aria-label="Interview Readiness Dashboard">
           <Dashboard
             stats={stats}

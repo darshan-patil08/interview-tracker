@@ -1,6 +1,3 @@
-import React from 'react';
-import { Heart, Sparkles, Terminal } from 'lucide-react';
-
 /**
  * Footer Component
  * Application footer with shortcuts and credit info.
