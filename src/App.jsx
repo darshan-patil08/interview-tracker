@@ -1,18 +1,30 @@
 import { useState, useMemo } from 'react';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import useQuestions from './hooks/useQuestions';
 import useFilters from './hooks/useFilters';
+import useTheme from './hooks/useTheme';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Dashboard from './components/dashboard/Dashboard';
 import FilterBar from './components/tracker/FilterBar/FilterBar';
 import QuestionList from './components/tracker/QuestionList/QuestionList';
 import QuestionFormModal from './components/tracker/QuestionForm/QuestionFormModal';
+import ImportModal from './components/tracker/ImportModal';
 import ConfirmDialog from './components/ui/ConfirmDialog';
 import { CATEGORIES } from './constants';
-import { BookOpen } from 'lucide-react';
+import showToast from './utils/toast';
+import {
+  ListChecks,
+  BarChart3,
+  CheckCircle2,
+  Clock,
+  CircleDashed,
+  Layers,
+} from 'lucide-react';
 
 export function App() {
+  const { isDark, toggleTheme } = useTheme();
+
   const {
     questions,
     stats,
@@ -20,7 +32,6 @@ export function App() {
     updateQuestion,
     deleteQuestion,
     toggleStatus,
-    resetToSeed,
     clearAll,
     importQuestions,
   } = useQuestions();
@@ -33,8 +44,12 @@ export function App() {
     resetFilters,
   } = useFilters(questions);
 
+  // ── Active Section View Tab ('tracker' | 'analytics') ─────
+  const [activeTab, setActiveTab] = useState('tracker');
+
   // ── Modal States ─────────────────────────────────────────
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [isClearAllDialogOpen, setIsClearAllDialogOpen] = useState(false);
@@ -74,11 +89,13 @@ export function App() {
   const handleFormSubmit = (formData) => {
     if (editingQuestion) {
       updateQuestion(editingQuestion.id, formData);
+      showToast.success('Question updated successfully!');
     } else {
       addQuestion({
         ...formData,
         category: prefilledCategory || formData.category,
       });
+      showToast.success('Question added to your tracker!');
     }
   };
 
@@ -86,26 +103,25 @@ export function App() {
   const handleConfirmDelete = () => {
     if (deletingId) {
       deleteQuestion(deletingId);
-      toast.success('Question deleted from tracker.', { icon: '🗑️' });
+      showToast.delete('Question removed from tracker.');
       setDeletingId(null);
     }
-  };
-
-  // ── Reset to Sample Data ─────────────────────────────────
-  const handleResetSeedData = () => {
-    resetToSeed();
-    toast.success('Reset to sample practice questions!', { icon: '🔄' });
   };
 
   // ── Clear All Data Confirmation ──────────────────────────
   const handleConfirmClearAll = () => {
     clearAll();
     setIsClearAllDialogOpen(false);
-    toast.success('All questions cleared.', { icon: '🧹' });
+    showToast.delete('All questions cleared from tracker.');
   };
 
   // ── Export JSON ──────────────────────────────────────────
   const handleExportData = () => {
+    if (!questions || questions.length === 0) {
+      showToast.error('No questions to export! Add questions to your tracker first.');
+      return;
+    }
+
     try {
       const dataStr =
         'data:text/json;charset=utf-8,' +
@@ -119,131 +135,176 @@ export function App() {
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      toast.success('Exported questions backup as JSON!', { icon: '💾' });
+      showToast.download(`Exported backup of ${questions.length} questions as JSON.`);
     } catch {
-      toast.error('Failed to export data.');
+      showToast.error('Failed to export questions.');
     }
   };
 
-  // ── Import JSON ──────────────────────────────────────────
-  const handleImportData = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const parsed = JSON.parse(event.target.result);
-        if (Array.isArray(parsed)) {
-          importQuestions(parsed);
-          toast.success(`Imported ${parsed.length} questions successfully!`, {
-            icon: '📥',
-          });
-        } else {
-          toast.error('Invalid JSON file format. Expected an array of questions.');
-        }
-      } catch {
-        toast.error('Could not parse JSON file.');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  };
-
   return (
-    <div className="min-h-screen bg-[#09080e] text-zinc-100 flex flex-col font-sans selection:bg-orange-500/30 selection:text-orange-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#09080e] text-slate-900 dark:text-zinc-100 flex flex-col font-sans transition-colors selection:bg-orange-500/20 selection:text-orange-900 dark:selection:bg-orange-500/30 dark:selection:text-orange-200">
       {/* Toast Notification Container */}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 3500,
-          style: {
-            background: '#13111c',
-            color: '#f3f4f6',
-            border: '1px solid #28243d',
-            borderRadius: '1rem',
-            fontSize: '0.875rem',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.6)',
-          },
-          success: {
-            iconTheme: {
-              primary: '#10b981',
-              secondary: '#13111c',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#13111c',
-            },
-          },
-        }}
-      />
+      <Toaster position="top-right" />
 
       {/* 1. Header Navigation */}
       <Navbar
         stats={stats}
         onOpenAddModal={() => handleOpenAddModal()}
-        onResetSeedData={handleResetSeedData}
         onClearAllData={() => setIsClearAllDialogOpen(true)}
         onExportData={handleExportData}
-        onImportData={handleImportData}
+        onOpenImportModal={() => setIsImportModalOpen(true)}
+        isDark={isDark}
+        toggleTheme={toggleTheme}
       />
 
       {/* 2. Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
-        {/* Dashboard Section */}
-        <section aria-label="Interview Readiness Dashboard">
-          <Dashboard
-            stats={stats}
-            onAddMachineTask={() => handleOpenAddModal(CATEGORIES.MACHINE)}
-          />
-        </section>
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+        {/* Section Navigation Tabs (Organized, unclustered layout) */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200 dark:border-zinc-800">
+          <div className="flex items-center p-1 rounded-xl bg-slate-200/70 dark:bg-zinc-900/90 border border-slate-300/80 dark:border-zinc-800 shadow-xs">
+            {/* Tab 1: Question Tracker */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('tracker')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === 'tracker'
+                  ? 'bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-sm'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
+              }`}
+            >
+              <ListChecks className="w-4 h-4 text-orange-500" />
+              <span>Question Tracker</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-700/60 font-mono text-slate-700 dark:text-zinc-300 font-bold">
+                {stats.total}
+              </span>
+            </button>
 
-        {/* Question Tracker Section */}
-        <section aria-label="Question Tracker" className="space-y-4 pt-2">
-          {/* Section Heading */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800/80 pb-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center">
-                <BookOpen className="w-4 h-4" />
-              </div>
-              <div>
-                <h2 className="text-base sm:text-lg font-bold text-zinc-100">
-                  Question Tracker
-                </h2>
-                <p className="text-xs text-zinc-400">
-                  Search, filter, track status, and review practice notes
-                </p>
-              </div>
-            </div>
+            {/* Tab 2: Analytics & Insights */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('analytics')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === 'analytics'
+                  ? 'bg-white dark:bg-zinc-800 text-slate-900 dark:text-zinc-100 shadow-sm'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4 text-purple-500" />
+              <span>Analytics & Insights</span>
+              {stats.completionRate > 0 && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 font-mono text-emerald-800 dark:text-emerald-300 font-bold">
+                  {stats.completionRate}%
+                </span>
+              )}
+            </button>
           </div>
 
-          {/* Filter, Search, and Sort Controls */}
-          <FilterBar
-            filters={filters}
-            updateFilter={updateFilter}
-            resetFilters={resetFilters}
-            hasActiveFilters={hasActiveFilters}
-            totalCount={stats.total}
-            filteredCount={filteredQuestions.length}
-            categoryCounts={categoryCounts}
-          />
+          {/* Quick status summary chip on the right */}
+          <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-zinc-400">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <strong className="text-slate-800 dark:text-zinc-200 font-mono">{stats.completed}</strong> Done
+            </span>
+            <span>·</span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <strong className="text-slate-800 dark:text-zinc-200 font-mono">{stats.inProgress}</strong> Active
+            </span>
+            <span>·</span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-slate-400 dark:bg-zinc-600" />
+              <strong className="text-slate-800 dark:text-zinc-200 font-mono">{stats.pending}</strong> Pending
+            </span>
+          </div>
+        </div>
 
-          {/* Question Grid / Empty States */}
-          <QuestionList
-            questions={filteredQuestions}
-            totalCount={stats.total}
-            searchQuery={filters.search}
-            hasActiveFilters={hasActiveFilters}
-            onToggleStatus={toggleStatus}
-            onEdit={handleOpenEditModal}
-            onDelete={(id) => setDeletingId(id)}
-            onResetFilters={resetFilters}
-            onAddQuestion={() => handleOpenAddModal()}
-            onLoadSamples={handleResetSeedData}
-          />
-        </section>
+        {/* ── View 1: Question Tracker ────────────────────── */}
+        {activeTab === 'tracker' && (
+          <section aria-label="Question Tracker View" className="space-y-5 animate-fade-up">
+            {/* Quick KPI Strip when questions exist */}
+            {stats.total > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
+                  <div>
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium block">Total In Track</span>
+                    <span className="text-lg font-bold text-slate-900 dark:text-zinc-100 font-mono">{stats.total}</span>
+                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 text-orange-600 dark:text-orange-400 flex items-center justify-center">
+                    <Layers className="w-4 h-4" />
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
+                  <div>
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium block">Completed</span>
+                    <span className="text-lg font-bold text-emerald-700 dark:text-emerald-400 font-mono">{stats.completed}</span>
+                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
+                  <div>
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium block">In Progress</span>
+                    <span className="text-lg font-bold text-amber-700 dark:text-amber-400 font-mono">{stats.inProgress}</span>
+                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-3 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
+                  <div>
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium block">Pending</span>
+                    <span className="text-lg font-bold text-slate-600 dark:text-zinc-400 font-mono">{stats.pending}</span>
+                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 flex items-center justify-center">
+                    <CircleDashed className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Filter, Search, and Sort Controls */}
+            <FilterBar
+              filters={filters}
+              updateFilter={updateFilter}
+              resetFilters={resetFilters}
+              hasActiveFilters={hasActiveFilters}
+              totalCount={stats.total}
+              filteredCount={filteredQuestions.length}
+              categoryCounts={categoryCounts}
+            />
+
+            {/* Question Grid / Empty States */}
+            <QuestionList
+              questions={filteredQuestions}
+              totalCount={stats.total}
+              searchQuery={filters.search}
+              hasActiveFilters={hasActiveFilters}
+              onToggleStatus={toggleStatus}
+              onEdit={handleOpenEditModal}
+              onDelete={(id) => setDeletingId(id)}
+              onResetFilters={resetFilters}
+              onAddQuestion={() => handleOpenAddModal()}
+              onOpenImport={() => setIsImportModalOpen(true)}
+            />
+          </section>
+        )}
+
+        {/* ── View 2: Analytics & Insights ────────────────── */}
+        {activeTab === 'analytics' && (
+          <section aria-label="Analytics & Insights View" className="animate-fade-up">
+            <Dashboard
+              stats={stats}
+              onAddMachineTask={() => {
+                setActiveTab('tracker');
+                handleOpenAddModal(CATEGORIES.MACHINE);
+              }}
+            />
+          </section>
+        )}
       </main>
 
       {/* 3. Footer */}
@@ -266,6 +327,15 @@ export function App() {
         }
       />
 
+      {/* JSON Import Modal */}
+      <ImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImport={(importedQuestions) => {
+          importQuestions(importedQuestions);
+        }}
+      />
+
       {/* Delete Single Question Confirmation Dialog */}
       <ConfirmDialog
         isOpen={Boolean(deletingId)}
@@ -285,7 +355,7 @@ export function App() {
         onClose={() => setIsClearAllDialogOpen(false)}
         onConfirm={handleConfirmClearAll}
         title="Clear All Questions?"
-        message="This will permanently delete all stored interview questions from LocalStorage. You can reload sample questions anytime."
+        message="This will permanently delete all stored interview questions from LocalStorage. This action cannot be undone."
         confirmText="Clear All Data"
         variant="danger"
       />

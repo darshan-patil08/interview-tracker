@@ -1,42 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   
-  --color-brand-primary: #f97316;
-  --color-brand-hover: #ea580c;
-  --color-brand-glow: rgba(249, 115, 22, 0.25);
-
-  --color-dark-bg: #09080e;
-  --color-dark-card: #13111c;
-  --color-dark-surface: #1a1726;
-  --color-dark-border: #28243d;
-  --color-dark-hover: #221e33;
+  --color-brand-primary: #ea580c;
+  --color-brand-hover: #c2410c;
 }
 
-/* Base body style */
+/* Base body style with smooth color transitions */
 body {
   margin: 0;
-  background-color: #09080e;
-  color: #f3f4f6;
   font-family: var(--font-sans);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar with Tailwind tokens */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #09080e;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #28243d;
+  background: #cbd5e1;
   border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #27272a;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #f97316;

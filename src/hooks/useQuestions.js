@@ -3,12 +3,13 @@
  * ─────────────────────────────────────────────────────────────
  * Primary data hook handling CRUD operations, data backups,
  * and derived statistics for interview preparation.
+ * Defaults to an empty list.
  * ─────────────────────────────────────────────────────────────
  */
 
 import { useMemo, useCallback } from 'react';
 import useLocalStorage from './useLocalStorage';
-import { STORAGE_KEY, SEED_QUESTIONS, STATUS, CATEGORIES } from '../constants';
+import { STORAGE_KEY, STATUS, CATEGORIES } from '../constants';
 
 function generateId() {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -18,8 +19,8 @@ function generateId() {
 }
 
 export function useQuestions() {
-  // ── Persistent State in LocalStorage ─────────────────────
-  const [questions, setQuestions] = useLocalStorage(STORAGE_KEY, SEED_QUESTIONS);
+  // ── Persistent State in LocalStorage (defaults to empty array) ──
+  const [questions, setQuestions] = useLocalStorage(STORAGE_KEY, []);
 
   // ── Add Question ─────────────────────────────────────────
   const addQuestion = useCallback(
@@ -94,11 +95,6 @@ export function useQuestions() {
     [setQuestions]
   );
 
-  // ── Reset to Seed Data ───────────────────────────────────
-  const resetToSeed = useCallback(() => {
-    setQuestions(SEED_QUESTIONS);
-  }, [setQuestions]);
-
   // ── Clear All Questions ──────────────────────────────────
   const clearAll = useCallback(() => {
     setQuestions([]);
@@ -166,7 +162,6 @@ export function useQuestions() {
     updateQuestion,
     deleteQuestion,
     toggleStatus,
-    resetToSeed,
     clearAll,
     importQuestions,
   };

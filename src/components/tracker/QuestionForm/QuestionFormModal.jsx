@@ -9,7 +9,7 @@ import StatusSelector from './StatusSelector';
 import { CATEGORIES, DIFFICULTY, STATUS } from '../../../constants';
 import { validateQuestionForm } from '../../../utils/helpers';
 import { Link2, Sparkles, CheckCircle2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import showToast from '../../../utils/toast';
 
 /**
  * QuestionFormContent Component
@@ -88,20 +88,19 @@ function QuestionFormContent({ initialData, onSubmit, onClose }) {
 
     if (Object.keys(validationErrors).length > 0) {
       const firstError = Object.values(validationErrors)[0];
-      toast.error(firstError || 'Please fix the errors in the form.');
+      showToast.error(firstError || 'Please fix the errors in the form.');
       return;
     }
 
     setIsSubmitting(true);
     try {
       onSubmit(formData);
-      toast.success(
-        isEditing ? 'Question updated successfully!' : 'Question added to tracker!',
-        { icon: isEditing ? '✏️' : '🚀' }
+      showToast.success(
+        isEditing ? 'Question updated successfully!' : 'Question added to tracker!'
       );
       onClose();
     } catch {
-      toast.error('Failed to save question. Please try again.');
+      showToast.error('Failed to save question. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -176,7 +175,7 @@ function QuestionFormContent({ initialData, onSubmit, onClose }) {
       />
 
       {/* Actions */}
-      <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800">
+      <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-zinc-800">
         <Button variant="ghost" size="md" onClick={onClose} disabled={isSubmitting}>
           Cancel
         </Button>

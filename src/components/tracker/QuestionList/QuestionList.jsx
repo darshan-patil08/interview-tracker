@@ -15,14 +15,14 @@ export function QuestionList({
   onDelete,
   onResetFilters,
   onAddQuestion,
-  onLoadSamples,
+  onOpenImport,
 }) {
-  // Case 1: Database/LocalStorage has no items at all
+  // Case 1: LocalStorage has no questions tracked yet
   if (totalCount === 0) {
     return (
       <EmptyState
         onAddQuestion={onAddQuestion}
-        onLoadSamples={onLoadSamples}
+        onOpenImport={onOpenImport}
       />
     );
   }

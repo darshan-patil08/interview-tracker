@@ -39,10 +39,10 @@ const CATEGORY_ITEMS = [
  */
 export function CategoryBreakdown({ stats }) {
   return (
-    <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-lg shadow-black/20 space-y-4">
+    <div className="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-200">Category Progress</h3>
-        <span className="text-xs text-zinc-500 font-mono">By Track</span>
+        <h3 className="text-sm font-semibold text-slate-800 dark:text-zinc-200">Category Progress</h3>
+        <span className="text-xs text-slate-500 dark:text-zinc-500 font-mono">By Track</span>
       </div>
 
       <div className="space-y-3.5">
@@ -57,11 +57,11 @@ export function CategoryBreakdown({ stats }) {
           return (
             <div key={item.key} className="space-y-1">
               <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-1.5 text-zinc-300 font-medium">
+                <span className="flex items-center gap-1.5 text-slate-700 dark:text-zinc-300 font-medium">
                   <Icon className={`w-3.5 h-3.5 ${item.textClass}`} />
                   <span>{item.title}</span>
                 </span>
-                <span className="text-zinc-400 font-mono text-[11px]">
+                <span className="text-slate-500 dark:text-zinc-400 font-mono text-[11px]">
                   {catStat.completed}/{catStat.total} ({rate}%)
                 </span>
               </div>

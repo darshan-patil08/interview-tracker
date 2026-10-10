@@ -7,17 +7,19 @@ import { SearchX, RotateCcw } from 'lucide-react';
  */
 export function NoSearchResults({ query, onResetFilters }) {
   return (
-    <div className="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-8 sm:p-10 text-center max-w-md mx-auto my-6 animate-fade-up">
-      <div className="w-12 h-12 mx-auto rounded-xl bg-zinc-800/80 border border-zinc-700/60 text-zinc-400 flex items-center justify-center mb-3">
-        <SearchX className="w-6 h-6 text-zinc-400" />
+    <div className="bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 rounded-2xl p-8 sm:p-10 text-center max-w-md mx-auto my-6 shadow-sm">
+      <div className="w-12 h-12 mx-auto rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 flex items-center justify-center mb-3">
+        <SearchX className="w-6 h-6" />
       </div>
 
-      <h4 className="text-base font-semibold text-zinc-200">No matching questions found</h4>
-      <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">
+      <h4 className="text-base font-bold text-slate-900 dark:text-zinc-100">
+        No matching questions found
+      </h4>
+      <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
         {query ? (
           <>
             No questions matched your search for{' '}
-            <span className="text-orange-400 font-mono font-medium">"{query}"</span>{' '}
+            <span className="text-orange-600 dark:text-orange-400 font-mono font-semibold">"{query}"</span>{' '}
             with current filter criteria.
           </>
         ) : (

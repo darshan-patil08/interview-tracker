@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 
 /**
  * Modal Component
- * Backdrop-blurred accessible modal dialog with smooth animations.
+ * Backdrop-blurred accessible modal dialog supporting both light and dark modes.
  */
 export function Modal({
   isOpen,
@@ -40,31 +40,35 @@ export function Modal({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-slate-900/40 dark:bg-black/75 backdrop-blur-sm transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Modal Card */}
       <div
-        className={`relative w-full ${maxWidth} bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl shadow-black/80 z-10 overflow-hidden transform transition-all animate-scale-in my-8`}
+        className={`relative w-full ${maxWidth} bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-2xl shadow-slate-900/10 dark:shadow-black/80 z-10 overflow-hidden transform transition-all animate-scale-in my-8`}
       >
         {/* Header */}
         {(title || onClose) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/80 bg-zinc-900/60">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-zinc-800/80 bg-slate-50/70 dark:bg-zinc-900/60">
             <div>
               {title && (
-                <h3 className="text-lg font-semibold text-zinc-100">{title}</h3>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-zinc-100">
+                  {title}
+                </h3>
               )}
               {subtitle && (
-                <p className="text-xs text-zinc-400 mt-0.5">{subtitle}</p>
+                <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+                  {subtitle}
+                </p>
               )}
             </div>
             <button
               type="button"
               onClick={onClose}
               aria-label="Close modal"
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500/40"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500/40 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>

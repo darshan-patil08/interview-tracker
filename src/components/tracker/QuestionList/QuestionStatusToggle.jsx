@@ -1,24 +1,23 @@
-/* eslint-disable no-unused-vars */
 import { STATUS } from '../../../constants';
-import { CheckCircle2, Clock, CircleDot, ChevronDown } from 'lucide-react';
+import { CheckCircle2, Clock, CircleDot } from 'lucide-react';
 import { getStatusStyle } from '../../../utils/helpers';
 
 /**
  * QuestionStatusToggle Component
  * Allows cycling or selecting status directly on the question card.
  */
-export function QuestionStatusToggle({ status, onToggle, onSelectStatus }) {
+export function QuestionStatusToggle({ status, onToggle }) {
   const statStyle = getStatusStyle(status);
 
   const getIcon = () => {
     switch (status) {
       case STATUS.COMPLETED:
-        return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />;
+        return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />;
       case STATUS.IN_PROGRESS:
-        return <Clock className="w-3.5 h-3.5 text-amber-400" />;
+        return <Clock className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />;
       case STATUS.PENDING:
       default:
-        return <CircleDot className="w-3.5 h-3.5 text-zinc-400" />;
+        return <CircleDot className="w-3.5 h-3.5 text-slate-600 dark:text-zinc-400" />;
     }
   };
 
@@ -28,7 +27,7 @@ export function QuestionStatusToggle({ status, onToggle, onSelectStatus }) {
         type="button"
         onClick={onToggle}
         title="Click to cycle status: Pending → In Progress → Completed"
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all cursor-pointer ${statStyle.badge} hover:shadow-sm`}
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-all cursor-pointer ${statStyle.badge} hover:shadow-sm`}
       >
         {getIcon()}
         <span>{status}</span>

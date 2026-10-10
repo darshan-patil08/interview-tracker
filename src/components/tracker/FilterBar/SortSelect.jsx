@@ -14,7 +14,7 @@ const SORT_OPTIONS = [
 export function SortSelect({ value, onChange }) {
   return (
     <div className="relative inline-flex items-center">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
         <ArrowUpDown className="w-3.5 h-3.5" />
       </div>
 
@@ -22,16 +22,20 @@ export function SortSelect({ value, onChange }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label="Sort questions"
-        className="bg-zinc-900/90 text-xs font-medium text-zinc-300 rounded-xl border border-zinc-800 hover:border-zinc-700 focus:border-orange-500/80 focus:ring-2 focus:ring-orange-500/20 pl-8 pr-8 py-2 appearance-none cursor-pointer outline-none transition-all"
+        className="bg-white dark:bg-zinc-900 text-xs font-semibold text-slate-700 dark:text-zinc-200 rounded-xl border border-slate-300 dark:border-zinc-800 hover:border-slate-400 dark:hover:border-zinc-700 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 pl-8 pr-8 py-2.5 sm:py-2 appearance-none cursor-pointer outline-none transition-all shadow-sm"
       >
         {SORT_OPTIONS.map((opt) => (
-          <option key={opt.value} value={opt.value} className="bg-zinc-900 text-zinc-200">
+          <option
+            key={opt.value}
+            value={opt.value}
+            className="bg-white text-slate-800 dark:bg-zinc-900 dark:text-zinc-200"
+          >
             {opt.label}
           </option>
         ))}
       </select>
 
-      <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none text-zinc-500 text-[10px]">
+      <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500 text-[10px]">
         ▼
       </div>
     </div>

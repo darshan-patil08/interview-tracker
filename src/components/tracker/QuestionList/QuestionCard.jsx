@@ -8,7 +8,7 @@ import { Calendar, CheckCheck } from 'lucide-react';
 
 /**
  * QuestionCard Component
- * Modern card displaying individual problem information with modular sub-components.
+ * High-contrast card with proper shadows and clean light/dark mode support.
  */
 export function QuestionCard({
   question,
@@ -22,15 +22,15 @@ export function QuestionCard({
 
   return (
     <div
-      className={`group relative bg-zinc-900/80 hover:bg-zinc-900 border rounded-2xl p-4 sm:p-5 transition-all duration-200 shadow-md shadow-black/20 hover:shadow-xl hover:shadow-black/40 flex flex-col justify-between ${
+      className={`group relative rounded-2xl p-4 sm:p-5 transition-all duration-200 flex flex-col justify-between border ${
         isCompleted
-          ? 'border-emerald-500/25 bg-zinc-900/60'
-          : 'border-zinc-800 hover:border-zinc-700'
+          ? 'bg-emerald-50/40 dark:bg-zinc-900/70 border-emerald-200 dark:border-emerald-500/25 shadow-sm'
+          : 'bg-white dark:bg-zinc-900/80 border-slate-200 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 shadow-sm hover:shadow-md'
       }`}
     >
       {/* Category accent bar at the top edge */}
       <div
-        className={`absolute top-0 left-6 right-6 h-[2px] rounded-b opacity-40 group-hover:opacity-100 transition-opacity ${catStyle.bar}`}
+        className={`absolute top-0 left-6 right-6 h-[2px] rounded-b opacity-60 group-hover:opacity-100 transition-opacity ${catStyle.bar}`}
       />
 
       <div>
@@ -53,12 +53,12 @@ export function QuestionCard({
           />
         </div>
 
-        {/* Question Title */}
+        {/* Question Title - High Contrast */}
         <h4
-          className={`text-sm sm:text-base font-semibold leading-snug transition-colors break-words ${
+          className={`text-sm sm:text-base font-bold leading-snug transition-colors break-words ${
             isCompleted
-              ? 'text-zinc-300 line-through decoration-zinc-600/70'
-              : 'text-zinc-100 group-hover:text-white'
+              ? 'text-slate-500 dark:text-zinc-400 line-through decoration-slate-400 dark:decoration-zinc-600'
+              : 'text-slate-900 dark:text-zinc-100 group-hover:text-orange-600 dark:group-hover:text-white'
           }`}
         >
           {title}
@@ -69,15 +69,15 @@ export function QuestionCard({
       </div>
 
       {/* Footer row: Status Toggle + Date Info */}
-      <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between gap-2 flex-wrap text-xs">
+      <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800/60 flex items-center justify-between gap-2 flex-wrap text-xs">
         <QuestionStatusToggle
           status={status}
           onToggle={() => onToggleStatus(id)}
         />
 
-        <div className="flex items-center gap-1.5 text-zinc-500 font-sans text-[11px]">
+        <div className="flex items-center gap-1.5 text-slate-500 dark:text-zinc-400 font-sans text-[11px]">
           {isCompleted && completedAt ? (
-            <span className="inline-flex items-center gap-1 text-emerald-400/90 font-medium">
+            <span className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-semibold">
               <CheckCheck className="w-3.5 h-3.5" />
               <span>Done {timeAgo(completedAt)}</span>
             </span>

@@ -2,7 +2,7 @@ import { ExternalLink, Pencil, Trash2 } from 'lucide-react';
 
 /**
  * QuestionActions Component
- * Action buttons for editing, deleting, or linking to a problem.
+ * Action buttons for editing, deleting, or linking to a problem with light/dark styles.
  */
 export function QuestionActions({
   leetcodeUrl,
@@ -19,7 +19,7 @@ export function QuestionActions({
           rel="noopener noreferrer"
           title="Open reference or problem URL"
           aria-label={`Open link for ${title}`}
-          className="p-1.5 rounded-lg text-zinc-400 hover:text-orange-400 hover:bg-zinc-800/80 transition-colors"
+          className="p-1.5 rounded-lg text-slate-400 hover:text-orange-600 dark:text-zinc-400 dark:hover:text-orange-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
         >
           <ExternalLink className="w-4 h-4" />
         </a>
@@ -30,7 +30,7 @@ export function QuestionActions({
         onClick={onEdit}
         title="Edit question"
         aria-label={`Edit ${title}`}
-        className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/80 transition-colors cursor-pointer"
+        className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
       >
         <Pencil className="w-4 h-4" />
       </button>
@@ -40,7 +40,7 @@ export function QuestionActions({
         onClick={onDelete}
         title="Delete question"
         aria-label={`Delete ${title}`}
-        className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer"
       >
         <Trash2 className="w-4 h-4" />
       </button>
